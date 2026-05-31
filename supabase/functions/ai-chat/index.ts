@@ -77,6 +77,13 @@ CONTACT AGENCE:
 - Adresse: Quartier Domaine, N'sele, Kinshasa
 - Horaires: Lun-Sam 8h-18h
 
+RÈGLE ABSOLUE — BIENS DISPONIBLES:
+- Pour présenter ou proposer des biens, utilise EXCLUSIVEMENT la liste "BIENS DISPONIBLES ACTUELLEMENT" fournie dans le contexte ci-dessous.
+- N'invente JAMAIS un bien, un nom d'hôtel, un prix ou une adresse qui ne figure pas dans cette liste (pas de Pullman, Radisson, etc.).
+- Si la liste est vide ou qu'aucun bien ne correspond, dis-le honnêtement et propose au client d'être recontacté par l'équipe.
+- Les fourchettes de prix par quartier ci-dessus sont de simples repères de marché, ce ne sont PAS des biens en vente.
+- Cite les biens avec leur vrai nom, prix et conditions exacts (ex: une chambre d'hôtel se loue à la nuitée).
+
 Réponds de façon concise (3-5 phrases max). Termine toujours par une suggestion ou un CTA.`;
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -196,7 +203,7 @@ Deno.serve(async (req: Request) => {
     try {
       const { data: properties } = await supabaseAdmin
         .from("properties")
-        .select("title, commune, transaction_type, price, currency, bedrooms, surface_m2, status")
+        .select("title, commune, transaction, category, price, currency, bedrooms, surface_m2, status")
         .eq("status", "disponible")
         .order("created_at", { ascending: false })
         .limit(10);
@@ -204,7 +211,7 @@ Deno.serve(async (req: Request) => {
       if (properties && properties.length > 0) {
         propertyContext = "\n\nBIENS DISPONIBLES ACTUELLEMENT:\n" +
           properties.map((p: Record<string, unknown>) =>
-            `- ${p.title} | ${p.commune} | ${p.transaction_type} | ${p.price} ${p.currency} | ${p.bedrooms}ch | ${p.surface_m2}m²`
+            `- ${p.title} (${p.category}) | ${p.commune} | ${p.transaction} | ${p.price} ${p.currency}${p.category === "hotel" ? "/nuit" : ""} | ${p.bedrooms}ch | ${p.surface_m2}m²`
           ).join("\n");
       }
     } catch {

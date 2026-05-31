@@ -122,9 +122,13 @@ function NightlyCard({ property, onPress }: { property: any; onPress: () => void
       </View>
       <View style={{ padding: 14 }}>
         <Text style={{ color: colors.brown.dark, fontSize: 16, fontWeight: "700" }} numberOfLines={1}>{property.title}</Text>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4, marginBottom: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 }}>
           <Ionicons name="location-outline" size={12} color={colors.text.secondary} />
           <Text style={{ color: colors.text.secondary, fontSize: 12 }} numberOfLines={1}>{property.commune ?? "Kinshasa"}</Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 6, marginBottom: 10 }}>
+          <Ionicons name="checkmark-circle" size={13} color="#2E7D32" />
+          <Text style={{ color: "#2E7D32", fontSize: 11, fontWeight: "600" }}>Annulation gratuite</Text>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Text style={{ color: colors.maroon, fontSize: 18, fontWeight: "800" }}>
