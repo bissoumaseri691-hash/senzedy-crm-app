@@ -60,6 +60,7 @@ import {
 } from "../types/property";
 import { useAuth } from "../context/AuthContext";
 import ContactModal from "../components/ContactModal";
+import ReservationModal from "../components/ReservationModal";
 
 const { width: SW, height: SH } = Dimensions.get("window");
 const GALLERY_H = SH * 0.48;
@@ -114,6 +115,7 @@ export default function PropertyDetailScreen({ propertyId, onBack, onSimilarPres
   const [descExpanded, setDescExpanded] = useState(false);
   const [similar,      setSimilar]      = useState<Property[]>([]);
   const [contactOpen,  setContactOpen]  = useState(false);
+  const [resaOpen,     setResaOpen]     = useState(false);
 
   // Favori avec animation
   const { isFav, loading: favLoading, toggle: toggleFav } = useFavoriteToggle(
@@ -624,7 +626,7 @@ export default function PropertyDetailScreen({ propertyId, onBack, onSimilarPres
 
         {/* Bouton Contacter principal */}
         <TouchableOpacity
-          onPress={handleContact}
+          onPress={property.category === "location" ? () => setResaOpen(true) : handleContact}
           style={{
             flex: 1, height: 52, borderRadius: 15,
             backgroundColor: GOLD,
@@ -633,9 +635,9 @@ export default function PropertyDetailScreen({ propertyId, onBack, onSimilarPres
             shadowOpacity: 0.38, shadowRadius: 10, elevation: 5,
           }}
         >
-          <Ionicons name="chatbubble-outline" size={18} color={colors.brown.dark} />
+          <Ionicons name={property.category === "location" ? "bed-outline" : "chatbubble-outline"} size={18} color={colors.brown.dark} />
           <Text style={{ color: colors.brown.dark, fontSize: 15, fontWeight: "800", letterSpacing: 0.3 }}>
-            {t("propertyDetail.callAgent")}
+            {property.category === "location" ? "Réserver" : t("propertyDetail.callAgent")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -654,6 +656,12 @@ export default function PropertyDetailScreen({ propertyId, onBack, onSimilarPres
         onClose={() => setContactOpen(false)}
         propertyId={propertyId}
         defaultSubject={`${property.title}`}
+      />
+
+      <ReservationModal
+        visible={resaOpen}
+        onClose={() => setResaOpen(false)}
+        property={property}
       />
     </View>
   );
