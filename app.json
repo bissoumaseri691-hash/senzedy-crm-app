@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "Senzedy Agency",
+    "slug": "senzedy-agency",
+    "version": "1.0.0",
+    "sdkVersion": "54.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#060606"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.senzedy.agency",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Senzedy Agency utilise l'appareil photo pour prendre des photos de biens immobiliers.",
+        "NSPhotoLibraryUsageDescription": "Senzedy Agency accède à votre galerie pour sélectionner des photos de biens.",
+        "NSLocationWhenInUseUsageDescription": "Senzedy Agency utilise votre position pour vous montrer les biens à proximité."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#060606"
+      },
+      "package": "com.senzedy.agency",
+      "versionCode": 1,
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "NOTIFICATIONS"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "scheme": "senzedy",
+    "plugins": [
+      "expo-secure-store",
+      "expo-font",
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#060606",
+          "image": "./assets/splash.png",
+          "imageWidth": 200
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#C9943A",
+          "sounds": []
+        }
+      ],
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0ef00e55-a1f1-4f1d-9305-23d679ed4696"
+      }
+    },
+    "owner": "seri75"
+  }
+}

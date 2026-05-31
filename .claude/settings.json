@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm cache clean --force)",
+      "Bash(wmic logicaldisk where \"DeviceID=''C:''\" get FreeSpace,Size)"
+    ]
+  }
+}
