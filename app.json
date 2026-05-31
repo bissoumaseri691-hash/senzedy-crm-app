@@ -30,7 +30,14 @@
       },
       "package": "com.senzedy.agency",
       "versionCode": 1,
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "NOTIFICATIONS"]
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -57,7 +64,8 @@
           "sounds": []
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-video"
     ],
     "extra": {
       "eas": {

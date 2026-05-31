@@ -14,6 +14,7 @@ import {
   StyleSheet,
   StatusBar,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -23,6 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { fonts } from "../theme/typography";
 import ContactModal from "../components/ContactModal";
+import { useInfiniteProperties } from "../hooks/useProperties";
 
 const { width: SW } = Dimensions.get("window");
 
@@ -93,9 +95,57 @@ export default function KinbnbScreen() {
 // ═══════════════════════════════════════════════════════════════════════
 //  TAB 1 : LOCATION À LA NUITÉE
 // ═══════════════════════════════════════════════════════════════════════
+function NightlyCard({ property, onPress }: { property: any; onPress: () => void }) {
+  const img = property.images?.[0] || property.main_image;
+  const sym = property.currency === "USD" ? "$" : property.currency === "CDF" ? "FC " : "";
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.9}
+      style={{
+        backgroundColor: colors.surface, borderRadius: 18, overflow: "hidden",
+        shadowColor: colors.brown.DEFAULT, shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.1, shadowRadius: 10, elevation: 3,
+      }}
+    >
+      <View style={{ height: 200, backgroundColor: colors.brown.medium }}>
+        {img ? (
+          <Image source={{ uri: img }} style={{ width: "100%", height: 200 }} contentFit="cover" transition={200} />
+        ) : (
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Ionicons name="bed-outline" size={32} color={colors.gold.pale} />
+          </View>
+        )}
+        <View style={{ position: "absolute", top: 12, left: 12, backgroundColor: colors.maroon, borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 }}>
+          <Text style={{ color: "#fff", fontSize: 9, fontWeight: "800", letterSpacing: 0.5 }}>NUITEE</Text>
+        </View>
+      </View>
+      <View style={{ padding: 14 }}>
+        <Text style={{ color: colors.brown.dark, fontSize: 16, fontWeight: "700" }} numberOfLines={1}>{property.title}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4, marginBottom: 10 }}>
+          <Ionicons name="location-outline" size={12} color={colors.text.secondary} />
+          <Text style={{ color: colors.text.secondary, fontSize: 12 }} numberOfLines={1}>{property.commune ?? "Kinshasa"}</Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <Text style={{ color: colors.maroon, fontSize: 18, fontWeight: "800" }}>
+            {sym}{property.price}
+            <Text style={{ fontSize: 11, fontWeight: "400", color: colors.text.secondary }}> / nuit</Text>
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: colors.gold.DEFAULT, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 7 }}>
+            <Text style={{ color: colors.dark.bg, fontSize: 12, fontWeight: "700" }}>Voir</Text>
+            <Ionicons name="chevron-forward" size={13} color={colors.dark.bg} />
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 function NuiteeTab() {
   const { open } = useContext(KinbnbContactCtx);
   const { t } = useTranslation();
+  const navigation = useNavigation<any>();
+  const { properties, loading } = useInfiniteProperties({ transaction: "location" });
   return (
     <>
       {/* Hero */}
@@ -117,7 +167,7 @@ function NuiteeTab() {
       <View style={s.filterBar}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <Ionicons name="bed-outline" size={18} color={colors.text.primary} />
-          <Text style={s.filterCount}>{t("kinbnb.availableCount")}</Text>
+          <Text style={s.filterCount}>{properties.length} {properties.length > 1 ? "logements disponibles" : "logement disponible"}</Text>
         </View>
         <View style={s.filterPill}>
           <Ionicons name="funnel-outline" size={14} color={colors.text.primary} />
@@ -125,12 +175,28 @@ function NuiteeTab() {
         </View>
       </View>
 
-      {/* Empty state */}
-      <View style={s.emptyState}>
-        <Ionicons name="bed-outline" size={56} color={colors.border.DEFAULT} />
-        <Text style={s.emptyTitle}>{t("kinbnb.noAccommodation")}</Text>
-        <Text style={s.emptyDesc}>{t("kinbnb.comingSoon")}</Text>
-      </View>
+      {/* Liste dynamique des biens à la nuitée (ou état vide) */}
+      {loading ? (
+        <View style={{ paddingVertical: 50, alignItems: "center" }}>
+          <ActivityIndicator color={colors.gold.DEFAULT} />
+        </View>
+      ) : properties.length > 0 ? (
+        <View style={{ paddingHorizontal: 14, paddingTop: 6, gap: 14 }}>
+          {properties.map((p) => (
+            <NightlyCard
+              key={p.id}
+              property={p}
+              onPress={() => navigation.navigate("PropertyDetail", { propertyId: p.id })}
+            />
+          ))}
+        </View>
+      ) : (
+        <View style={s.emptyState}>
+          <Ionicons name="bed-outline" size={56} color={colors.border.DEFAULT} />
+          <Text style={s.emptyTitle}>{t("kinbnb.noAccommodation")}</Text>
+          <Text style={s.emptyDesc}>{t("kinbnb.comingSoon")}</Text>
+        </View>
+      )}
 
       {/* CTA */}
       <View style={s.sectionLight}>

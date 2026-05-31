@@ -35,6 +35,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Image }             from "expo-image";
+import { useVideoPlayer, VideoView } from "expo-video";
 import { LinearGradient }    from "expo-linear-gradient";
 import { Ionicons }          from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -75,6 +76,26 @@ interface Props {
 // ═══════════════════════════════════════════════════════════════════════
 //  COMPOSANT PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════════
+
+function VideoSection({ url }: { url: string }) {
+  const player = useVideoPlayer(url, (p) => { p.loop = false; });
+  return (
+    <View style={{ paddingHorizontal: 22, marginTop: 18 }}>
+      <Text style={{ color: GOLD, fontSize: 11, fontWeight: "700", letterSpacing: 2, textTransform: "uppercase", marginBottom: 10 }}>
+        Visite en video
+      </Text>
+      <View style={{ borderRadius: 16, overflow: "hidden", backgroundColor: "#000" }}>
+        <VideoView
+          player={player}
+          style={{ width: "100%", height: 220 }}
+          contentFit="contain"
+          nativeControls
+          allowsFullscreen
+        />
+      </View>
+    </View>
+  );
+}
 
 export default function PropertyDetailScreen({ propertyId, onBack, onSimilarPress }: Props) {
   const insets   = useSafeAreaInsets();
@@ -336,6 +357,8 @@ export default function PropertyDetailScreen({ propertyId, onBack, onSimilarPres
         </View>
 
         {/* ── CONTENU ─────────────────────────────────────────────── */}
+        {(property as any).video_url ? <VideoSection url={(property as any).video_url} /> : null}
+
         <View style={{ paddingHorizontal: 22, paddingTop: 6 }}>
 
           {/* Titre + statut */}
